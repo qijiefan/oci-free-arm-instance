@@ -73,11 +73,12 @@ jobs:
 
           if echo "$OCI_OUTPUT" | grep -q '"lifecycle-state": "PROVISIONING"'; then
             echo "Success: VM is provisioning."
+            echo "created=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           echo "VM was not created on this attempt."
-          exit 1
+          echo "created=false" >> "$GITHUB_OUTPUT"
 
       - name: Send Discord notification
         if: always() && env.DISCORD_WEBHOOK_URL != ''
@@ -95,3 +96,7 @@ jobs:
             ```json
             ${{ steps.create_vm.outputs.log_data }}
             ```
+
+      - name: Fail if VM was not created
+        if: steps.create_vm.outputs.created != 'true'
+        run: exit 1

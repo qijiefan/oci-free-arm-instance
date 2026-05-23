@@ -74,23 +74,25 @@ jobs:
           if echo "$OCI_OUTPUT" | grep -q '"lifecycle-state": "PROVISIONING"'; then
             echo "Success: VM is provisioning."
             echo "created=true" >> "$GITHUB_OUTPUT"
+            echo "status=success" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           echo "VM was not created on this attempt."
           echo "created=false" >> "$GITHUB_OUTPUT"
+          echo "status=failure" >> "$GITHUB_OUTPUT"
 
       - name: Send Discord notification
         if: always() && env.DISCORD_WEBHOOK_URL != ''
         uses: sarisia/actions-status-discord@v1.15.4
         with:
           webhook: ${{ env.DISCORD_WEBHOOK_URL }}
-          title: "OCI VM Status: ${{ steps.create_vm.outcome }}"
-          status: ${{ steps.create_vm.outcome }}
-          color: ${{ steps.create_vm.outcome == 'success' && '0x28a745' || '0xdc3545' }}
+          title: "OCI VM Status: ${{ steps.create_vm.outputs.status }}"
+          status: ${{ steps.create_vm.outputs.status }}
+          color: ${{ steps.create_vm.outputs.created == 'true' && '0x28a745' || '0xdc3545' }}
           description: |
             Attempt to create A1.Flex VM in `${{ secrets.OCI_CLI_REGION }}`.
-            **Status:** `${{ steps.create_vm.outcome }}`
+            **Status:** `${{ steps.create_vm.outputs.status }}`
 
             **Log Output:**
             ```json

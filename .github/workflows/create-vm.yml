@@ -17,6 +17,7 @@ env:
   OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
   DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
   INSTANCE_DISPLAY_NAME: coolify-vm
+  PYTHONWARNINGS: ignore
 
 jobs:
   create-vm:

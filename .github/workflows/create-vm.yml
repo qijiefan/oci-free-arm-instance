@@ -65,7 +65,7 @@ jobs:
             --shape "VM.Standard.A1.Flex" \
             --shape-config '{"ocpus":4,"memoryInGBs":24}' \
             --subnet-id "$OCI_SUBNET_ID" \
-            --source-details "{\"bootVolumeSizeInGBs\":150,\"bootVolumeVpusPerGB\":120,\"imageId\":\"$IMAGE_ID\",\"sourceType\":\"image\"}" \
+            --source-details "{\"bootVolumeSizeInGBs\":200,\"bootVolumeVpusPerGB\":120,\"imageId\":\"$IMAGE_ID\",\"sourceType\":\"image\"}" \
             --ssh-authorized-keys-file "/home/runner/my_ssh_key.pub" \
             --assign-public-ip true \
             --display-name "$INSTANCE_DISPLAY_NAME" 2>&1 || true)

@@ -59,12 +59,10 @@ jobs:
             --shape "VM.Standard.A1.Flex" \
             --shape-config '{"ocpus":4,"memoryInGBs":24}' \
             --subnet-id "$OCI_SUBNET_ID" \
-            --image-id "$IMAGE_ID" \
+            --source-details "{\"bootVolumeSizeInGBs\":150,\"bootVolumeVpusPerGB\":120,\"imageId\":\"$IMAGE_ID\",\"sourceType\":\"image\"}" \
             --ssh-authorized-keys-file "/home/runner/my_ssh_key.pub" \
             --assign-public-ip true \
-            --display-name "coolify-vm" \
-            --boot-volume-size-in-gbs 150 \
-            --boot-volume-vpus-per-gb 120 2>&1 || true)
+            --display-name "coolify-vm" 2>&1 || true)
 
           {
             echo "log_data<<EOF"

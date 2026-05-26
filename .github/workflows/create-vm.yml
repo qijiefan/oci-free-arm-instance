@@ -73,7 +73,18 @@ jobs:
             exit 0
           fi
 
-          EXISTING_INSTANCES=$(jq --arg name "$INSTANCE_DISPLAY_NAME" '[.data[] | select(."display-name" == $name)] | length' /tmp/running-instances.json)
+          EXISTING_INSTANCES=$(python3 - "$INSTANCE_DISPLAY_NAME" <<'PY'
+          import json
+          import sys
+
+          display_name = sys.argv[1]
+          with open("/tmp/running-instances.json", "r", encoding="utf-8") as f:
+              payload = json.load(f)
+
+          instances = payload.get("data", [])
+          print(sum(1 for item in instances if item.get("display-name") == display_name))
+          PY
+          )
 
           if [[ "$EXISTING_INSTANCES" =~ ^[0-9]+$ ]] && [ "$EXISTING_INSTANCES" -gt 0 ]; then
             OCI_OUTPUT="Found $EXISTING_INSTANCES running $INSTANCE_DISPLAY_NAME instance(s). Skipping creation to keep only one Always Free target instance."
